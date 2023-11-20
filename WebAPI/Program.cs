@@ -1,5 +1,10 @@
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using Business.Abstract;
+using Business.DependencyResolvers.Autofac;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
+using WebAPI.Controllers;
 
 namespace WebAPI
 {
@@ -8,40 +13,19 @@ namespace WebAPI
 
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-
-            builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-
-            var app = builder.Build();
-
-
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-
-            var connectionString = builder.Configuration.GetConnectionString("AppDb");
-            builder.Services.AddDbContext<DbContext>(x => x.UseSqlServer(connectionString));
-
-            
+            CreateHostBuilder(args).Build().Run();
         }
-        
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                .ConfigureContainer<ContainerBuilder>(builder =>
+                {
+                    builder.RegisterModule(new AutofacBusinessModule());
+                })
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }

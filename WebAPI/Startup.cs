@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPI.Controllers;
 
 namespace WebAPI
 {
@@ -28,14 +29,12 @@ namespace WebAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // This method gets called by the runtime. Use thiss method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
             services.AddControllers();
-            services.AddScoped<IProductService, ProductManager>();
-            services.AddScoped<IProductDal, EfProductDal>();
+            //services.AddScoped<IProductService, ProductManager>();
+            //services.AddScoped<IProductDal, EfProductDal>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
