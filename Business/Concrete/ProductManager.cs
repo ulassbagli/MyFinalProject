@@ -33,9 +33,10 @@ namespace Business.Concrete
             _categoryService = categoryService;
         }
 
+        // [SecuredOperation("product.add")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
-        {
+        { 
             IResult result = BusinessRules.Run(CheckIfProductsNameExists(product.ProductName),
                 CheckIfProductCountOfCategoryCorrect(product.CategoryId), CheckIfCountOfCategoryIdExist());
 
